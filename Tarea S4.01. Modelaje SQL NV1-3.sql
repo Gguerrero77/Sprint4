@@ -1,10 +1,11 @@
 /*Ejercicio Nivel 1 
 
-Se crea la tabla user teniendo en cuenta la distribucion de los datos en los archivos csv "users_ca", "users_uk" y "users_usa"
-manteniendo la caracteristica de autoincremento del campo id que es la primary key*/
+Se crea la tabla user teniendo en cuenta la distribucion de los datos en los archivos csv "users_ca", "users_uk" y "users_usa", el campo id es la primary key*/
+CREATE DATABASE sp4;
+use sp4;
 
 CREATE TABLE user (
-id INT PRIMARY KEY AUTO_INCREMENT,
+id INT PRIMARY KEY,
 nombre VARCHAR(50),
 apellido VARCHAR(50),
 telefono VARCHAR(50),
@@ -16,7 +17,32 @@ codigo_postal VARCHAR(50),
 direccion VARCHAR(100)
 );
 
-/*Se hace la importacion de los datos mediante el "Table data import wizard".*/
+select * from user;
+
+SET GLOBAL local_infile = 'ON';
+
+LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\users_usa.csv"
+INTO TABLE user
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
+
+LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\users_uk.csv"
+INTO TABLE user
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
+
+LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\users_ca.csv"
+INTO TABLE user
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
+
+/*O Se hace la importacion de los datos utilizando la herramienta import*/
 
 /*CREACION DE LA TABLA COMPANY*/
 
@@ -31,6 +57,15 @@ website VARCHAR(100)
 
 /*SE IMPORTAN LOS DATOS DEL ARCHIVO COMPANIES.CSV*/
 
+LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\companies.csv"
+INTO TABLE user
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
+
+/*O Se hace la importacion de los datos utilizando la herramienta import*/
+
 CREATE TABLE credit_cards (
 id VARCHAR(50) PRIMARY KEY,
 user_id int,
@@ -43,10 +78,18 @@ track2 VARCHAR(150),
 expiring_date VARCHAR(50)
 );
 
+LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\credit_cards.csv"
+INTO TABLE user
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
+
+/*O Se hace la importacion de los datos utilizando la herramienta import*/
 #Se crea la tabla products
 
 CREATE TABLE products (
-id INT PRIMARY KEY AUTO_INCREMENT,
+id INT PRIMARY KEY,
 product_name VARCHAR(50),
 price VARCHAR(50),
 colour VARCHAR(50),
@@ -54,9 +97,16 @@ weight DOUBLE,
 warehouse_id VARCHAR(50)
 );
 
-/*SE IMPORTAN LOS DATOS DEL ARCHIVO products.CSV
+LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\products.csv"
+INTO TABLE user
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
 
-se crea la tabla transactions*/
+/*O Se hace la importacion de los datos utilizando la herramienta import*/
+
+/*se crea la tabla transactions*/
 
 CREATE TABLE transactions (
 id VARCHAR(50) PRIMARY KEY,
@@ -74,6 +124,15 @@ longitude DOUBLE
 /*SE IMPORTAN LOS DATOS DEL ARCHIVO transactions.CSV
 y se crean las FK*/
 
+LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\transactions.csv"
+INTO TABLE user
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
+
+/*O Se hace la importacion de los datos utilizando la herramienta import*/
+
 ALTER TABLE transactions
 ADD FOREIGN KEY (card_id) REFERENCES credit_cards(id),
 ADD FOREIGN KEY (business_id) REFERENCES company(id),
@@ -81,19 +140,19 @@ ADD FOREIGN KEY (user_id) REFERENCES user(id);
 
 #Ejercicio 1
 
-SELECT u.id AS Usuario, count(t.id) AS No_operaciones
+SELECT u.id AS UserId, concat(u.nombre, ' ', u.apellido) AS User, count(t.id) AS No_operaciones
 FROM user u
 JOIN transactions t ON u.id = t.user_id
-GROUP BY Usuario
+GROUP BY UserId
 HAVING No_operaciones > 30;
 
 # Ejercicio 2
 
-SELECT AVG(t.amount) AS Media_de_gasto, cc.iban AS Iban
+SELECT format(AVG(t.amount), 2) AS Media_de_gasto, cc.iban AS Iban
 FROM credit_cards cc
 JOIN transactions t ON t.card_id = cc.id
 JOIN company c ON t.business_id = c.id
-WHERE c.nombre IN ("Donec Ltd")
+WHERE c.nombre = "Donec Ltd"
 GROUP BY Iban;
 
 #Ejercicio Nivel 2
@@ -107,48 +166,34 @@ END) as Status
 FROM (SELECT card_id, declined, timestamp
  FROM (SELECT t.declined, t.card_id, t.timestamp,
      @rown := IF(@target = t.card_id, @rown + 1, 1) AS rown, @target := t.card_id 
-        FROM transactions t JOIN (SELECT @target := NULL, @rown := 0) 
+        FROM transactions t JOIN (SELECT @target = NULL, @rown = 0) 
 AS Bucle ORDER BY t.card_id, t.timestamp DESC, t.declined ) AS T1 WHERE rown <= 3) AS last3
 GROUP BY card_id);
 
-SELECT * 
-FROM status;
+SELECT count(status) 
+FROM status
+WHERE status = "Activa";
 
 #Ejercicio Nv3
 
 CREATE TABLE Prods_Transaction (
-SELECT id, pid
-FROM (
-	SELECT id, @num := 1 + LENGTH(product_ids) - LENGTH(REPLACE(product_ids, ',', '')) AS num,
-		IF(@num >= 1, SUBSTRING_INDEX(product_ids, ',', 1), NULL) AS PID
-	FROM transactions t
-    where t.declined = 0) AS pdi1
-UNION ALL 
-SELECT id, pid
-FROM (
-	SELECT id, @num := 1 + LENGTH(product_ids) - LENGTH(REPLACE(product_ids, ',', '')) AS num,
-		IF(@num > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(product_ids, ',', 2), ',', -1), NULL) AS PID
-	FROM transactions t
-    where t.declined = 0) AS pdi2
-UNION ALL
-SELECT id, pid
-FROM (
-	SELECT id, @num := 1 + LENGTH(product_ids) - LENGTH(REPLACE(product_ids, ',', '')) AS num,
-		IF(@num > 2, SUBSTRING_INDEX(SUBSTRING_INDEX(product_ids, ',', 3), ',', -1), NULL) AS PID
-	FROM transactions t
-    where t.declined = 0) AS pdi3
-UNION ALL
-SELECT id, pid
-FROM (
-	SELECT id, @num := 1 + LENGTH(product_ids) - LENGTH(REPLACE(product_ids, ',', '')) AS num,
-		IF(@num > 3, SUBSTRING_INDEX(SUBSTRING_INDEX(product_ids, ',', 4), ',', -1), NULL) AS PID
-	FROM transactions t
-    where t.declined = 0) AS pdi4
-);
+SELECT 
+    t.id AS id,
+    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(t.product_ids, ',', n.n), ',', -1) AS UNSIGNED) AS pid
+FROM 
+    transactions t
+CROSS JOIN 
+    (SELECT @prods := @prods + 1 AS n
+     FROM (SELECT @prods := 0) r
+     CROSS JOIN transactions
+     WHERE declined = 0) n
+WHERE 
+    n.n <= LENGTH(t.product_ids) - LENGTH(REPLACE(t.product_ids, ',', '')) + 1 AND t.declined = 0);
 
 ALTER TABLE Prods_Transaction MODIFY pid int,
 ADD FOREIGN KEY (id) REFERENCES transactions(id),
 ADD FOREIGN KEY (pid) REFERENCES products(id);
+
 
 SELECT p.id AS Producto, COUNT(pt.pid) Total_Vendido
 FROM products p
