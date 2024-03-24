@@ -22,7 +22,7 @@ select * from user;
 SET GLOBAL local_infile = 'ON';
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_usa.csv"
-INTO TABLE company
+INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -58,7 +58,7 @@ website VARCHAR(100)
 /*SE IMPORTAN LOS DATOS DEL ARCHIVO COMPANIES.CSV*/
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/companies.csv"
-INTO TABLE user
+INTO TABLE company
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -79,7 +79,7 @@ expiring_date VARCHAR(50)
 );
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/credit_cards.csv"
-INTO TABLE user
+INTO TABLE credit_cards
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -98,7 +98,7 @@ warehouse_id VARCHAR(50)
 );
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/products.csv"
-INTO TABLE user
+INTO TABLE products
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -125,7 +125,7 @@ longitude DOUBLE
 y se crean las FK*/
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/transactions.csv"
-INTO TABLE user
+INTO TABLE transactions
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -170,7 +170,7 @@ FROM (SELECT card_id, declined, timestamp
 AS Bucle ORDER BY t.card_id, t.timestamp DESC, t.declined ) AS T1 WHERE rown <= 3) AS last3
 GROUP BY card_id);
 
-SELECT count(status) 
+SELECT count(status) AS Total_Tarjetas_Activas
 FROM status
 WHERE status = "Activa";
 
