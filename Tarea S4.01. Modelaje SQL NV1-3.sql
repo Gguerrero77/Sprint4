@@ -21,21 +21,21 @@ select * from user;
 
 SET GLOBAL local_infile = 'ON';
 
-LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\users_usa.csv"
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_usa.csv"
+INTO TABLE company
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
+
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_uk.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
 
-LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\users_uk.csv"
-INTO TABLE user
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
-
-LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\users_ca.csv"
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_ca.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
@@ -57,7 +57,7 @@ website VARCHAR(100)
 
 /*SE IMPORTAN LOS DATOS DEL ARCHIVO COMPANIES.CSV*/
 
-LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\companies.csv"
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/companies.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
@@ -78,7 +78,7 @@ track2 VARCHAR(150),
 expiring_date VARCHAR(50)
 );
 
-LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\credit_cards.csv"
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/credit_cards.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
@@ -97,7 +97,7 @@ weight DOUBLE,
 warehouse_id VARCHAR(50)
 );
 
-LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\products.csv"
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/products.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
@@ -124,7 +124,7 @@ longitude DOUBLE
 /*SE IMPORTAN LOS DATOS DEL ARCHIVO transactions.CSV
 y se crean las FK*/
 
-LOAD DATA LOCAL INFILE "C:\Users\abg_g\Documents\Barcelona Activa\Especialización Analisis de Datos\MySQL\Sprints\Tarea S4.01 NV1-3\transactions.csv"
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/transactions.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
