@@ -17,32 +17,28 @@ codigo_postal VARCHAR(50),
 direccion VARCHAR(100)
 );
 
-select * from user;
-
 SET GLOBAL local_infile = 'ON';
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_usa.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_uk.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
 
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_ca.csv"
 INTO TABLE user
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
-
-/*O Se hace la importacion de los datos utilizando la herramienta import*/
 
 /*CREACION DE LA TABLA COMPANY*/
 
@@ -64,7 +60,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
 
-/*O Se hace la importacion de los datos utilizando la herramienta import*/
+/*CREACION DE LA TABLA credit_cards*/
 
 CREATE TABLE credit_cards (
 id VARCHAR(50) PRIMARY KEY,
@@ -85,8 +81,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
 
-/*O Se hace la importacion de los datos utilizando la herramienta import*/
-#Se crea la tabla products
+/*CREACION DE LA TABLA products*/
 
 CREATE TABLE products (
 id INT PRIMARY KEY,
@@ -104,9 +99,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
 
-/*O Se hace la importacion de los datos utilizando la herramienta import*/
-
-/*se crea la tabla transactions*/
+/*CREACION DE LA TABLA transactions*/
 
 CREATE TABLE transactions (
 id VARCHAR(50) PRIMARY KEY,
@@ -130,8 +123,6 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES; -- Ignora la primera línea si contiene encabezados
-
-/*O Se hace la importacion de los datos utilizando la herramienta import*/
 
 ALTER TABLE transactions
 ADD FOREIGN KEY (card_id) REFERENCES credit_cards(id),
@@ -169,6 +160,13 @@ FROM (SELECT card_id, declined, timestamp
         FROM transactions t JOIN (SELECT @target = NULL, @rown = 0) 
 AS Bucle ORDER BY t.card_id, t.timestamp DESC, t.declined ) AS T1 WHERE rown <= 3) AS last3
 GROUP BY card_id);
+
+ALTER TABLE status
+ADD PRIMARY KEY (card_id);
+
+ALTER TABLE transactions
+ADD FOREIGN KEY (card_id) REFERENCES status (card_id);
+
 
 SELECT count(status) AS Total_Tarjetas_Activas
 FROM status
