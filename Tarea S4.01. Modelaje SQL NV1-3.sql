@@ -193,8 +193,8 @@ ADD FOREIGN KEY (id) REFERENCES transactions(id),
 ADD FOREIGN KEY (pid) REFERENCES products(id);
 
 
-SELECT p.id AS Producto, COUNT(pt.pid) Total_Vendido
+SELECT p.id AS Product_Id, p.product_name, COUNT(pt.pid) Total_Vendido
 FROM products p
-JOIN prods_transaction pt ON pt.pid = p.id
-GROUP BY Producto
-ORDER BY Producto ASC;
+LEFT JOIN prods_transaction pt ON pt.pid = p.id
+GROUP BY Product_Id
+ORDER BY Product_Id ASC;
